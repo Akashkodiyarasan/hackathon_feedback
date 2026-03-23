@@ -24,7 +24,7 @@ const AdminLogin = () => {
     if (login(email, password)) {
       navigate(redirect);
     } else {
-      setError("Invalid credentials. Try admin@college.edu / admin123");
+      setError("Invalid credentials. Please try again.");
     }
   };
 
@@ -90,9 +90,6 @@ const AdminLogin = () => {
           </form>
         </div>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
-          Demo: admin@college.edu / admin123
-        </p>
       </motion.div>
     </div>
   );

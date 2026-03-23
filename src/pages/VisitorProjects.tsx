@@ -62,11 +62,10 @@ const VisitorProjects = () => {
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -4, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className={`rounded-xl shadow-card p-4 space-y-3 border transition-all duration-300 hover:shadow-xl ${
-                  submitted
+                className={`rounded-xl shadow-card p-4 space-y-3 border transition-all duration-300 hover:shadow-xl ${submitted
                     ? "bg-success/5 border-success/30 hover:bg-success/10 hover:border-success/50"
                     : "bg-card border-transparent hover:bg-primary/5 hover:border-primary/20"
-                }`}
+                  }`}
               >
                 <div>
                   <div className="flex items-center gap-2">

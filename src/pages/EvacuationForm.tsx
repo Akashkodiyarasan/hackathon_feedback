@@ -130,9 +130,6 @@ const EvacuationForm = () => {
             </button>
             <h1 className="font-bold text-foreground text-lg">Evacuation Evaluation</h1>
           </div>
-          <div className="text-sm font-medium text-muted-foreground bg-muted px-2 py-1 rounded-md">
-            Staff: {staff.staffName}
-          </div>
         </div>
       </header>
 
@@ -147,27 +144,13 @@ const EvacuationForm = () => {
               <ClipboardCheck className="text-primary" size={32} />
             </div>
             <h2 className="text-xl font-bold text-foreground">{stageData.title}</h2>
-            <p className="text-sm text-muted-foreground">Evaluate '{project.name}'</p>
+            <p className="text-sm text-muted-foreground">Evaluate {project.name} - {project.teamName}</p>
           </div>
 
           <div className="bg-muted/50 rounded-lg p-4 space-y-3">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-medium text-muted-foreground">Evaluator:</span>
-                <p className="font-semibold text-foreground">{staff.staffName}</p>
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">Team Name:</span>
-                <p className="font-semibold text-foreground">{project.teamName}</p>
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">Team ID:</span>
-                <p className="font-semibold text-foreground">{project.id}</p>
-              </div>
-              <div>
-                <span className="font-medium text-muted-foreground">Project:</span>
-                <p className="font-semibold text-foreground">{project.name}</p>
-              </div>
+            <div className="text-center">
+              <span className="font-medium text-muted-foreground">Team Name:</span>
+              <p className="font-semibold text-foreground text-lg">{project.teamName}</p>
             </div>
           </div>
 

@@ -19,7 +19,7 @@ const VisitorProjects = () => {
       <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="container max-w-2xl flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Kings Logo" className="w-10 h-10 object-contain drop-shadow" />
+            <GraduationCap className="text-primary" size={32} />
             <div className="flex flex-col">
               <h1 className="font-extrabold text-foreground text-xl tracking-tight uppercase leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>Kings College of Eng.</h1>
               <span className="text-sm font-medium text-muted-foreground mt-1">Project Exhibition</span>

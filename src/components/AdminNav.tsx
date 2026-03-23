@@ -17,7 +17,7 @@ const AdminNav = () => {
     <header className="bg-card border-b border-border sticky top-0 z-20">
       <div className="container max-w-4xl flex items-center justify-between py-2.5">
         <div className="flex items-center gap-3">
-          <GraduationCap className="text-primary hidden sm:block" size={30} />
+          <img src="/logo.png" alt="Kings Logo" className="w-10 h-10 object-contain drop-shadow hidden sm:block" />
           <div className="flex flex-col">
             <span className="font-extrabold text-foreground text-lg uppercase tracking-tight leading-none" style={{ fontFamily: "'Outfit', sans-serif" }}>Kings College of Eng.</span>
             <span className="text-xs font-medium text-muted-foreground mt-1">Feedback System</span>

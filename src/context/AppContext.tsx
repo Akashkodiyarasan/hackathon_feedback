@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, where, getDocs, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export interface Project {
@@ -93,8 +93,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const deleteProject = useCallback(async (id: string) => {
     try {
       await deleteDoc(doc(db, "projects", id));
+      
+      const q = query(collection(db, "feedbacks"), where("projectId", "==", id));
+      const snapshot = await getDocs(q);
+      const batch = writeBatch(db);
+      snapshot.forEach((docSnapshot) => {
+        batch.delete(docSnapshot.ref);
+      });
+      await batch.commit();
     } catch (error) {
-      console.error("Error deleting project:", error);
+      console.error("Error deleting project and its feedbacks:", error);
     }
   }, []);
 

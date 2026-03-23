@@ -29,7 +29,8 @@ const AdminDashboard = () => {
     return { ...project, feedbackCount: fb.length, avgRating, avgMarks };
   });
 
-  const totalFeedbacks = feedbacks.length;
+  const validProjectIds = new Set(projects.map(p => p.id));
+  const totalFeedbacks = feedbacks.filter(f => validProjectIds.has(f.projectId)).length;
   const highestRated = projectStats.length ? projectStats.reduce((a, b) => (b.avgRating > a.avgRating ? b : a)) : null;
   const highestMarks = projectStats.length ? projectStats.reduce((a, b) => (b.avgMarks > a.avgMarks ? b : a)) : null;
 

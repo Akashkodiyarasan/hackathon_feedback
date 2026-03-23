@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/context/AppContext";
 import { Send } from "lucide-react";
@@ -21,7 +21,15 @@ const AddProject = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", teamName: "", department: "", description: "" });
 
-  if (!isAdmin) { navigate("/admin"); return null; }
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/admin");
+    }
+  }, [isAdmin, navigate]);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

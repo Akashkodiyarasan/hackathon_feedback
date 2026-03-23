@@ -19,19 +19,55 @@ export interface Feedback {
   createdAt: string;
 }
 
+export interface Staff {
+  staffId: string;
+  password: string;
+  assignedStage: 1 | 2 | 3;
+  staffName: string;
+}
+
+export interface Evaluation {
+  id: string;
+  staffId: string;
+  projectId: string;
+  stage: 1 | 2 | 3;
+  criteriaMarks: Record<string, number>;
+  subtotal: number;
+  timestamp: string;
+}
+
+export interface Evacuation {
+  id: string;
+  staffId: string;
+  projectId: string;
+  stage1: number;
+  stage2: number;
+  stage3: number;
+  total: number;
+  result: "Pass" | "Fail";
+  timestamp: string;
+}
+
 interface AppState {
   projects: Project[];
   feedbacks: Feedback[];
+  staff: Staff[];
+  evaluations: Evaluation[];
   isAdmin: boolean;
   addProject: (p: Omit<Project, "id">) => void;
   updateProject: (id: string, p: Omit<Project, "id">) => void;
   deleteProject: (id: string) => void;
   addFeedback: (f: Omit<Feedback, "id" | "createdAt">) => void;
+  addEvaluation: (e: Omit<Evaluation, "id" | "timestamp">) => void;
+  addEvacuation: (e: Omit<Evacuation, "id" | "timestamp">) => void;
   login: (email: string, password: string) => boolean;
   logout: () => void;
   getFeedbacksForProject: (projectId: string) => Feedback[];
   hasSubmittedFeedback: (projectId: string) => boolean;
   markFeedbackSubmitted: (projectId: string) => void;
+  getEvaluationsForProject: (projectId: string) => Evaluation[];
+  getStaffById: (staffId: string) => Staff | undefined;
+  evacuations: Evacuation[];
 }
 
 const AppContext = createContext<AppState | null>(null);
@@ -55,6 +91,9 @@ const getSubmittedProjects = (): string[] => {
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [staff, setStaff] = useState<Staff[]>([]);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
+  const [evacuations, setEvacuations] = useState<Evacuation[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -68,9 +107,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setFeedbacks(fbData);
     });
 
+    const unsubStaff = onSnapshot(collection(db, "staff"), (snapshot) => {
+      const staffData = snapshot.docs.map(d => ({ ...d.data() } as Staff));
+      setStaff(staffData);
+    });
+
+    const unsubEvaluations = onSnapshot(collection(db, "evaluations"), (snapshot) => {
+      const evalData = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Evaluation));
+      setEvaluations(evalData);
+    });
+
+    const unsubEvacuations = onSnapshot(collection(db, "evacuations"), (snapshot) => {
+      const evData = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Evacuation));
+      setEvacuations(evData);
+    });
+
     return () => {
       unsubProjects();
       unsubFeedbacks();
+      unsubStaff();
+      unsubEvaluations();
+      unsubEvacuations();
     };
   }, []);
 
@@ -117,6 +174,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
+  const addEvaluation = useCallback(async (e: Omit<Evaluation, "id" | "timestamp">) => {
+    try {
+      // Use setDoc with a specific custom ID so we don't duplicate evaluations per staff&project&stage
+      const { setDoc } = await import("firebase/firestore");
+      await setDoc(doc(db, "evaluations", `${e.stage}_${e.staffId}_${e.projectId}`), {
+        ...e,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error adding evaluation:", error);
+    }
+  }, []);
+
+  const addEvacuation = useCallback(async (e: Omit<Evacuation, "id" | "timestamp">) => {
+    try {
+      await addDoc(collection(db, "evacuations"), {
+        ...e,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error adding evacuation:", error);
+    }
+  }, []);
+
   const login = useCallback((email: string, password: string) => {
     if (email === "admin@college.edu" && password === "admin123") {
       setIsAdmin(true);
@@ -130,6 +211,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const getFeedbacksForProject = useCallback(
     (projectId: string) => feedbacks.filter((f) => f.projectId === projectId),
     [feedbacks]
+  );
+
+  const getEvaluationsForProject = useCallback(
+    (projectId: string) => evaluations.filter((e) => e.projectId === projectId),
+    [evaluations]
+  );
+
+  const getStaffById = useCallback(
+    (staffId: string) => staff.find((s) => s.staffId === staffId),
+    [staff]
   );
 
   const hasSubmittedFeedback = useCallback((projectId: string) => {
@@ -147,10 +238,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
-        projects, feedbacks, isAdmin,
+        projects, feedbacks, staff, evaluations, evacuations, isAdmin,
         addProject, updateProject, deleteProject,
-        addFeedback, login, logout,
+        addFeedback, addEvaluation, addEvacuation, login, logout,
         getFeedbacksForProject, hasSubmittedFeedback, markFeedbackSubmitted,
+        getEvaluationsForProject, getStaffById,
       }}
     >
       {children}

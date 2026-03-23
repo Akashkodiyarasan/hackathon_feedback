@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppState } from "@/context/AppContext";
-import { GraduationCap, Users, Building2, User, ShieldCheck } from "lucide-react";
+import { GraduationCap, Users, Building2, User, ShieldCheck, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 const ProjectLanding = () => {
@@ -49,18 +49,32 @@ const ProjectLanding = () => {
 
         <div className="space-y-3">
           <button
-            onClick={() => navigate(`/feedback/${project.id}`)}
-            className="w-full flex items-center justify-center gap-2 bg-accent text-accent-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition shadow-card"
+            onClick={() => navigate("/")}
+            className="w-full flex items-center justify-center gap-2 bg-accent/20 text-accent-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition shadow-card"
           >
             <User size={18} />
             Continue as Visitor
           </button>
           <button
-            onClick={() => navigate(`/admin?redirect=/admin/review/${project.id}`)}
+            onClick={() => navigate(`/feedback/${project.id}`)}
+            className="w-full flex items-center justify-center gap-2 bg-accent text-accent-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition shadow-card"
+          >
+            <MessageCircle size={18} />
+            Give Feedback
+          </button>
+          <button
+            onClick={() => {
+              const staffId = localStorage.getItem("evacuation_staff_session");
+              if (staffId) {
+                navigate(`/evacuation/evaluate/${project.id}`);
+              } else {
+                navigate(`/evacuation/login/${project.id}`);
+              }
+            }}
             className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-xl font-semibold text-sm hover:opacity-90 transition shadow-card"
           >
             <ShieldCheck size={18} />
-            Admin Login
+            Staff Evacuation
           </button>
         </div>
       </motion.div>

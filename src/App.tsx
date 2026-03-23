@@ -15,6 +15,8 @@ import ViewFeedback from "./pages/ViewFeedback";
 import ProjectLanding from "./pages/ProjectLanding";
 import ProjectReview from "./pages/ProjectReview";
 import NotFound from "./pages/NotFound";
+import StaffLogin from "./pages/StaffLogin";
+import EvacuationForm from "./pages/EvacuationForm";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +38,8 @@ const App = () => (
             <Route path="/admin/edit-project/:projectId" element={<EditProject />} />
             <Route path="/admin/feedback/:projectId" element={<ViewFeedback />} />
             <Route path="/admin/review/:projectId" element={<ProjectReview />} />
+            <Route path="/evacuation/login/:projectId" element={<StaffLogin />} />
+            <Route path="/evacuation/evaluate/:projectId" element={<EvacuationForm />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

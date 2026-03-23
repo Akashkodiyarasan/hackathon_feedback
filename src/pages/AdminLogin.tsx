@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppState } from "@/context/AppContext";
 import { LogIn, Mail, Lock, GraduationCap } from "lucide-react";
@@ -13,9 +13,14 @@ const AdminLogin = () => {
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get("redirect") || "/admin/dashboard";
 
+  useEffect(() => {
+    if (isAdmin) {
+      navigate(redirect);
+    }
+  }, [isAdmin, navigate, redirect]);
+
   // Already logged in
   if (isAdmin) {
-    navigate(redirect);
     return null;
   }
 

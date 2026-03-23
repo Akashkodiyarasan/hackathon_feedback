@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { useAppState } from "@/context/AppContext";
 import StarRating from "@/components/StarRating";
 import { MessageSquare } from "lucide-react";
@@ -11,8 +12,17 @@ const ViewFeedback = () => {
   const navigate = useNavigate();
   const project = projects.find((p) => p.id === projectId);
 
-  if (!isAdmin) { navigate("/admin"); return null; }
-  if (!project) { navigate("/admin/dashboard"); return null; }
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/admin");
+    } else if (!project) {
+      navigate("/admin/dashboard");
+    }
+  }, [isAdmin, project, navigate]);
+
+  if (!isAdmin || !project) {
+    return null;
+  }
 
   const feedbacks = getFeedbacksForProject(project.id);
   const avgRating = feedbacks.length ? feedbacks.reduce((s, f) => s + f.rating, 0) / feedbacks.length : 0;

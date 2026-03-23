@@ -273,7 +273,7 @@ interface ProjectStat {
 const ProjectCard = ({ project, index, navigate, onDelete, tab }: { project: ProjectStat; index: number; navigate: ReturnType<typeof useNavigate>; onDelete: (id: string) => void; tab: string }) => {
   const { staff } = useAppState();
   const qrRef = useRef<HTMLDivElement>(null);
-  const qrUrl = `${window.location.origin}/feedback/${project.id}`;
+  const qrUrl = `${window.location.origin}/project/${project.id}`;
 
   const downloadQR = useCallback(() => {
     const canvas = qrRef.current?.querySelector("canvas");

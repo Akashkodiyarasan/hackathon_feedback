@@ -86,7 +86,7 @@ const VisitorProjects = () => {
                   </span>
                 ) : (
                   <button
-                    onClick={() => navigate(`/feedback/${project.id}`)}
+                    onClick={() => navigate(`/project/${project.id}`)}
                     className="flex items-center gap-1.5 text-sm font-medium bg-accent/10 text-accent px-3 py-1.5 rounded-lg hover:bg-accent/20 transition"
                   >
                     <MessageCircle size={15} />
